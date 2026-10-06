@@ -1,0 +1,374 @@
+---
+const nav = [
+  { label: 'はふり屋について', href: '/about' },
+  { label: 'メニュー・料金',   href: '/menu'  },
+  { label: 'よくある質問',     href: '/faq'   },
+  { label: 'ブログ',           href: '/blog'  },
+  { label: 'アクセス',         href: '/access'},
+];
+---
+
+<!-- PC Sidebar (hero in view only) -->
+<aside class="site-sidebar" id="site-sidebar">
+  <div class="sidebar-full">
+    <a href="/" class="logo">
+      <span class="logo-main">漢方舎</span>
+      <span class="logo-sub">はふり屋</span>
+    </a>
+    <div class="sidebar-line"></div>
+    <nav class="global-nav" aria-label="グローバルナビ">
+      {nav.map(({ label, href }) => (
+        <a href={href} class="nav-link">{label}</a>
+      ))}
+    </nav>
+  </div>
+</aside>
+
+<!-- PC Hamburger (独立fixed、スクロール後に表示) -->
+<button class="pc-hamburger" id="pc-hamburger" aria-label="メニューを開く" aria-expanded="false">
+  <span></span>
+  <span></span>
+  <span class="pc-hamburger-label">Menu</span>
+</button>
+
+<!-- Mobile Header -->
+<header class="mobile-header">
+  <a href="/" class="mobile-logo">
+    <span>漢方舎</span>
+    <span>はふり屋</span>
+  </a>
+  <button class="mobile-hamburger" id="mobile-hamburger" aria-label="メニューを開く" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- Navigation Overlay (shared: PC + mobile) -->
+<div class="nav-overlay" id="nav-overlay" aria-hidden="true">
+  <div class="nav-panel">
+    <button class="nav-overlay-close" id="nav-overlay-close" aria-label="メニューを閉じる">
+      <span></span><span></span>
+    </button>
+    <a href="/" class="overlay-logo">
+      <span class="overlay-logo-main">漢方舎</span>
+      <span class="overlay-logo-sub">はふり屋</span>
+    </a>
+    <nav class="nav-overlay-list">
+      {nav.map(({ label, href }) => (
+        <a href={href} class="nav-overlay-link">{label}</a>
+      ))}
+    </nav>
+    <a href="/contact" class="btn btn-accent overlay-cta">ご予約・お問い合わせ</a>
+  </div>
+</div>
+
+<script>
+  const sidebar         = document.getElementById('site-sidebar')!;
+  const pcHamburger     = document.getElementById('pc-hamburger')!;
+  const mobileHamburger = document.getElementById('mobile-hamburger')!;
+  const navOverlay      = document.getElementById('nav-overlay')!;
+  const overlayClose    = document.getElementById('nav-overlay-close')!;
+
+  const hero = document.querySelector('.hero') as HTMLElement | null;
+
+  if (hero) {
+    let collapsed = false;
+
+    const update = () => {
+      const heroBottom = hero.getBoundingClientRect().bottom;
+      const fadeRange = window.innerHeight * 0.5; // ビューポートの下半分でフェード
+      const progress = Math.max(0, Math.min(1, 1 - heroBottom / fadeRange));
+
+      sidebar.style.opacity = String(1 - progress);
+      pcHamburger.style.opacity = String(progress);
+      pcHamburger.style.visibility = progress > 0 ? 'visible' : 'hidden';
+      pcHamburger.style.pointerEvents = progress > 0.5 ? 'auto' : 'none';
+
+      const shouldCollapse = progress >= 1;
+      if (shouldCollapse !== collapsed) {
+        collapsed = shouldCollapse;
+        sidebar.style.visibility = shouldCollapse ? 'hidden' : 'visible';
+        document.body.classList.toggle('sidebar-collapsed', shouldCollapse);
+      }
+    };
+
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  } else {
+    sidebar.style.opacity = '0';
+    sidebar.style.visibility = 'hidden';
+    pcHamburger.style.opacity = '1';
+    pcHamburger.style.visibility = 'visible';
+    pcHamburger.style.pointerEvents = 'auto';
+    document.body.classList.add('sidebar-collapsed');
+  }
+
+  function openNav() {
+    navOverlay.setAttribute('aria-hidden', 'false');
+    navOverlay.classList.add('is-open');
+    document.body.classList.add('nav-open');
+  }
+  function closeNav() {
+    navOverlay.setAttribute('aria-hidden', 'true');
+    navOverlay.classList.remove('is-open');
+    document.body.classList.remove('nav-open');
+  }
+
+  pcHamburger.addEventListener('click', openNav);
+  mobileHamburger.addEventListener('click', openNav);
+  overlayClose.addEventListener('click', closeNav);
+  navOverlay.querySelectorAll('a').forEach(a => a.addEventListener('click', closeNav));
+</script>
+
+<style>
+/* ─── PC Sidebar ─── */
+.site-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar-w);
+  z-index: 100;
+  background: rgba(248, 246, 241, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-right: 1px solid rgba(40, 40, 40, .06);
+}
+
+.sidebar-full {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: var(--sp-xl) var(--sp-lg);
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  flex-direction: row;
+  gap: .5em;
+  color: var(--ink);
+  transition: opacity var(--transition);
+  flex-shrink: 0;
+}
+.logo:hover { opacity: .65; }
+.logo-main {
+  writing-mode: vertical-rl;
+  font-size: var(--text-sm);
+  font-weight: 300;
+  letter-spacing: .12em;
+  line-height: 1.4;
+}
+.logo-sub {
+  writing-mode: vertical-rl;
+  font-size: var(--text-xl);
+  font-weight: 500;
+  letter-spacing: .12em;
+  line-height: 1.4;
+}
+
+/* Divider */
+.sidebar-line {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  flex-shrink: 0;
+  margin-block: var(--sp-lg);
+}
+
+/* 2-column nav */
+.global-nav {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-md) var(--sp-sm);
+  align-content: center;
+  overflow: hidden;
+}
+.nav-link {
+  writing-mode: vertical-rl;
+  font-size: .72rem;
+  letter-spacing: .14em;
+  color: var(--text);
+  line-height: 1.9;
+  transition: color var(--transition);
+}
+.nav-link:hover {
+  color: var(--ink);
+  opacity: 1;
+}
+
+/* ─── PC Hamburger (独立fixed) ─── */
+.pc-hamburger {
+  position: fixed;
+  top: var(--sp-xl);
+  left: var(--sp-lg);
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.pc-hamburger span:not(.pc-hamburger-label) {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: var(--ink);
+}
+.pc-hamburger-label {
+  font-size: .6rem;
+  letter-spacing: .22em;
+  color: var(--ink);
+  font-family: var(--font-serif);
+  margin-top: 2px;
+}
+
+/* Mobile header (hidden on PC) */
+.mobile-header {
+  display: none;
+}
+
+/* ─── Nav Overlay ─── */
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0);
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+  visibility: hidden;
+  transition: background var(--transition), visibility var(--transition);
+}
+.nav-overlay.is-open {
+  visibility: visible;
+  background: rgba(0, 0, 0, 0.45);
+}
+.nav-panel {
+  width: 380px;
+  height: 100%;
+  background: var(--base);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: var(--sp-2xl) var(--sp-xl);
+  overflow-y: auto;
+  transform: translateX(-100%);
+  transition: transform var(--transition);
+  position: relative;
+}
+.nav-overlay.is-open .nav-panel {
+  transform: translateX(0);
+}
+.nav-overlay-close {
+  position: absolute;
+  top: var(--sp-lg);
+  right: var(--sp-lg);
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+}
+.nav-overlay-close span {
+  display: block;
+  position: absolute;
+  width: 24px;
+  height: 1px;
+  background: var(--ink);
+  top: 50%;
+  left: 50%;
+}
+.nav-overlay-close span:nth-child(1) { transform: translate(-50%, -50%) rotate(45deg); }
+.nav-overlay-close span:nth-child(2) { transform: translate(-50%, -50%) rotate(-45deg); }
+
+.overlay-logo {
+  display: flex;
+  flex-direction: row;
+  gap: .5em;
+  color: var(--ink);
+  margin-bottom: var(--sp-lg);
+}
+.overlay-logo:hover { opacity: .65; }
+.overlay-logo-main {
+  writing-mode: vertical-rl;
+  font-size: var(--text-sm);
+  font-weight: 300;
+  letter-spacing: .12em;
+}
+.overlay-logo-sub {
+  writing-mode: vertical-rl;
+  font-size: var(--text-xl);
+  font-weight: 500;
+  letter-spacing: .12em;
+}
+
+.nav-overlay-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-lg);
+}
+.nav-overlay-link {
+  font-size: var(--text-lg);
+  letter-spacing: .15em;
+  color: var(--text);
+}
+.overlay-cta {
+  margin-top: var(--sp-xl);
+}
+
+/* ─── Mobile ─── */
+@media (max-width: 768px) {
+  .site-sidebar { display: none; }
+  .pc-hamburger { display: none; }
+  .nav-panel { width: 100%; transform: none; }
+
+  .mobile-header {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    z-index: 100;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--sp-md);
+    background: var(--base);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mobile-logo {
+    display: flex;
+    gap: .4em;
+    color: var(--ink);
+    font-size: var(--text-xs);
+    letter-spacing: .08em;
+  }
+
+  .mobile-hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .mobile-hamburger span {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: var(--ink);
+  }
+}
+</style>

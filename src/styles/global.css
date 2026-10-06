@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;700&display=swap');
+
+:root {
+  --sidebar-w: 120px;
+  --sidebar-w-sm: 64px;
+
+  --base:        #F8F6F1;
+  --base-dark:   #EEEAE3;
+  --ink:         #1E2420;
+  --text:        #282828;
+  --text-light:  #6B6B6B;
+  --white:       #FFFFFF;
+  --accent:      #20b2aa;
+  --accent-dark: #178a84;
+  --border:      rgba(40, 40, 40, .12);
+
+  --font-serif: 'Noto Serif JP', 'YuMincho', '游明朝', 'Hiragino Mincho ProN', serif;
+
+  --text-xs:   clamp(.75rem,  1.8vw, .8rem);
+  --text-sm:   clamp(.85rem,  2vw,   .9rem);
+  --text-base: clamp(.9rem,   2.4vw, 1rem);
+  --text-md:   clamp(1rem,    2.8vw, 1.125rem);
+  --text-lg:   clamp(1.1rem,  3vw,   1.375rem);
+  --text-xl:   clamp(1.25rem, 4vw,   1.75rem);
+  --text-2xl:  clamp(1.5rem,  5vw,   2.25rem);
+  --text-3xl:  clamp(1.875rem,6vw,   3rem);
+
+  --sp-xs:  clamp(.4rem,  1.2vw, .6rem);
+  --sp-sm:  clamp(.6rem,  2vw,   .875rem);
+  --sp-md:  clamp(.875rem,2.8vw, 1.25rem);
+  --sp-lg:  clamp(1.25rem,4vw,   2rem);
+  --sp-xl:  clamp(2rem,   6vw,   3.5rem);
+  --sp-2xl: clamp(3rem,   8vw,   5rem);
+  --sp-3xl: clamp(4rem,   10vw,  7rem);
+
+  --transition: .28s cubic-bezier(.4, 0, .2, 1);
+  --spring:     cubic-bezier(.34, 1.56, .64, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-serif);
+  background-color: var(--base);
+  color: var(--text);
+  font-size: var(--text-base);
+  line-height: 1.9;
+  -webkit-font-smoothing: antialiased;
+  margin-left: var(--sidebar-w);
+  transition: margin-left var(--transition);
+}
+body.sidebar-collapsed { margin-left: 0; }
+body.nav-open { overflow: hidden; }
+
+@media (max-width: 768px) {
+  body {
+    margin-left: 0;
+    padding-top: 56px;
+    transition: none;
+  }
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity var(--transition);
+}
+a:hover { opacity: .7; }
+
+/* ─── Utility ─── */
+.container {
+  width: min(100% - 2 * var(--sp-lg), 1100px);
+  margin-inline: auto;
+}
+
+.vertical {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.section-label {
+  font-size: var(--text-xs);
+  letter-spacing: .25em;
+  color: var(--text-light);
+  text-transform: uppercase;
+}
+
+.section-title {
+  font-size: var(--text-xl);
+  font-weight: 300;
+  letter-spacing: .12em;
+  line-height: 1.6;
+}
+
+.divider {
+  width: 1px;
+  height: 3rem;
+  background: var(--ink);
+  margin-inline: auto;
+}
+
+/* ─── Button ─── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .5em;
+  padding: .85em 2em;
+  font-family: var(--font-serif);
+  font-size: var(--text-sm);
+  letter-spacing: .15em;
+  border: 1px solid currentColor;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+
+.btn-accent {
+  background: var(--base);
+  color: var(--ink);
+  border-color: var(--base);
+  font-weight: 500;
+}
+.btn-accent:hover {
+  background: var(--white);
+  border-color: var(--white);
+  opacity: 1;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #2C3B35;
+  border-color: #2C3B35;
+}
+.btn-outline:hover {
+  background: #2C3B35;
+  color: var(--white);
+  opacity: 1;
+}
+
+.btn-outline-white {
+  background: transparent;
+  color: var(--white);
+  border-color: var(--white);
+}
+.btn-outline-white:hover {
+  background: var(--white);
+  color: var(--ink);
+  opacity: 1;
+}

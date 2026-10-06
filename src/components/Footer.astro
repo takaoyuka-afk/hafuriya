@@ -1,0 +1,144 @@
+---
+const nav = [
+  { label: 'はふり屋について', href: '/about' },
+  { label: 'メニュー・料金',   href: '/menu'  },
+  { label: 'よくある質問',     href: '/faq'   },
+  { label: 'ブログ',           href: '/blog'  },
+  { label: 'アクセス',         href: '/access'},
+  { label: 'ご予約・お問い合わせ', href: '/contact' },
+];
+
+const sns = [
+  { label: 'Instagram', href: 'https://www.instagram.com/kampo_hafuriya/' },
+  { label: 'YouTube',   href: 'https://www.youtube.com/@kanpo_hafuriya'   },
+  { label: 'note',      href: 'https://note.com/hafuriya'                 },
+  { label: 'X',         href: 'https://x.com/Hafuriya'                   },
+  { label: 'Threads',   href: 'https://www.threads.com/@kampo_hafuriya'  },
+];
+---
+
+<footer class="site-footer">
+  <div class="footer-inner container">
+    <div class="footer-top">
+      <div class="footer-info">
+        <p class="footer-name">漢方舎はふり屋</p>
+        <address>
+          <p>〒168-0082</p>
+          <p>東京都杉並区久我山３－２４－９</p>
+          <p>ガーデンプレイス久我山108</p>
+        </address>
+        <p class="footer-hours">
+          火〜金 10:00〜19:00 &ensp;土 10:00〜18:00<br>
+          <span class="footer-closed">定休日：日・月・祝日・年末年始</span>
+        </p>
+      </div>
+
+      <nav class="footer-nav" aria-label="フッターナビ">
+        {nav.map(({ label, href }) => (
+          <a href={href} class="footer-nav-link">{label}</a>
+        ))}
+      </nav>
+
+      <div class="footer-sns">
+        <p class="footer-sns-label">SNS</p>
+        {sns.map(({ label, href }) => (
+          <a href={href} target="_blank" rel="noopener noreferrer" class="footer-sns-link">
+            {label}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <small>&copy; 2025 漢方舎はふり屋. All rights reserved.</small>
+    </div>
+  </div>
+</footer>
+
+<style>
+.site-footer {
+  background: var(--ink);
+  color: rgba(248, 246, 241, .75);
+  padding-top: var(--sp-3xl);
+  padding-bottom: var(--sp-xl);
+  font-size: var(--text-xs);
+}
+
+.footer-inner { }
+
+.footer-top {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: var(--sp-2xl);
+  padding-bottom: var(--sp-xl);
+  border-bottom: 1px solid rgba(248, 246, 241, .12);
+  margin-bottom: var(--sp-lg);
+}
+
+.footer-name {
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--base);
+  letter-spacing: .1em;
+  margin-bottom: var(--sp-md);
+}
+
+address {
+  font-style: normal;
+  line-height: 1.9;
+  margin-bottom: var(--sp-md);
+}
+
+.footer-hours { line-height: 1.8; }
+.footer-closed { color: rgba(248, 246, 241, .5); }
+
+.footer-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-sm);
+  padding-top: .25rem;
+}
+.footer-nav-link {
+  letter-spacing: .08em;
+  white-space: nowrap;
+  transition: color var(--transition);
+}
+.footer-nav-link:hover {
+  color: var(--base);
+  opacity: 1;
+}
+
+.footer-sns {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-sm);
+  padding-top: .25rem;
+}
+.footer-sns-label {
+  font-size: var(--text-xs);
+  letter-spacing: .2em;
+  color: rgba(248, 246, 241, .4);
+  margin-bottom: var(--sp-xs);
+}
+.footer-sns-link {
+  letter-spacing: .08em;
+  transition: color var(--transition);
+}
+.footer-sns-link:hover {
+  color: rgba(248, 246, 241, .8);
+  opacity: 1;
+}
+
+.footer-bottom {
+  text-align: center;
+  color: rgba(248, 246, 241, .3);
+  letter-spacing: .1em;
+}
+
+@media (max-width: 768px) {
+  .footer-top {
+    grid-template-columns: 1fr;
+    gap: var(--sp-xl);
+  }
+}
+</style>
